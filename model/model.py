@@ -31,7 +31,7 @@ class Encoder(nn.Module):
                             batch_first=True)
 
 #     @timer('encoder')
-    def forward(self, x, decoder_embedding):
+    def forward(self, x):
         """Define forward propagation for the endoer.
 
         Args:
