@@ -70,7 +70,7 @@ def train(dataset, val_dataset, v, start_epoch=0):
     
     if config.scheduled_sampling:
         print('scheduled_sampling mode.')
-    #  teacher_forcing = True
+    teacher_forcing = True
 
     with tqdm(total=config.epochs) as epoch_progress:
         for epoch in range(start_epoch, config.epochs):
@@ -78,7 +78,7 @@ def train(dataset, val_dataset, v, start_epoch=0):
             batch_losses = []  # Get loss of each batch.
             num_batches = len(train_dataloader)
             # set a teacher_forcing signal
-            # print('teacher_forcing = {}'.format(teacher_forcing))
+            print('teacher_forcing = {}'.format(teacher_forcing))
             with tqdm(total=num_batches//100) as batch_progress:
                 for batch, data in enumerate(tqdm(train_dataloader)):
                     x, y, x_len, y_len, oov, len_oovs = data
