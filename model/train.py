@@ -92,7 +92,10 @@ def train(dataset, val_dataset, v, start_epoch=0):
                     model.train()  # Sets the module in training mode.
                     optimizer.zero_grad()  # Clear gradients.
                     # Calculate loss.  Call model forward propagation
-                    loss = model(x, x_len, y, len_oovs, batch=batch, num_batches=num_batches)
+                    loss = model(x, x_len, y, len_oovs, 
+                                batch=batch, 
+                                num_batches=num_batches, 
+                                teacher_forcing=teacher_forcing)
                     batch_losses.append(loss.item())
                     loss.backward()  # Backpropagation.
 
