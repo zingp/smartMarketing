@@ -125,7 +125,7 @@ def train(dataset, val_dataset, v, start_epoch=0):
             epoch_progress.set_postfix(Loss=epoch_loss)
             epoch_progress.update()
 
-            avg_val_loss = evaluate(model, val_data, epoch)
+            avg_val_loss = evaluate(model, val_data, epoch, teacher_forcing)
 
             print('training loss:{}'.format(epoch_loss),
                   'validation loss:{}'.format(avg_val_loss))

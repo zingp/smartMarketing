@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-
 import os
 import sys
 import pathlib
@@ -17,7 +15,7 @@ from dataset import collate_fn
 import config
 
 
-def evaluate(model, val_data, epoch):
+def evaluate(model, val_data, epoch, teacher_forcing):
     """Evaluate the loss for an epoch.
 
     Args:
@@ -46,8 +44,12 @@ def evaluate(model, val_data, epoch):
                 x_len = x_len.to(DEVICE)
                 len_oovs = len_oovs.to(DEVICE)
             # Calculate loss.  Call model forward propagation
-            ###########################################
-            #          TODO: module 5 task 4          #
-            ###########################################
+            loss = model(x,
+                         x_len,
+                         y,
+                         len_oovs,
+                         batch=batch,
+                         num_batches=len(val_dataloader),
+                         teacher_forcing=teacher_forcing)
             val_loss.append(loss.item())
     return np.mean(val_loss)
