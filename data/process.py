@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+解析原始数据：'../files/服饰_50k.json'
+转换成样本需要的格式： 语料与参考数据用<sep>分割
+划分训练集、验证集、测试集
+"""
 import os
 import sys
 import json
 import jieba
 import pathlib
-
 abs_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(sys.path.append(abs_path))
 from data_utils import write_samples, partition
@@ -30,7 +34,7 @@ for jsobj in jsf.values():
     texts.append(title + ocr + kb_merged)  # Merge them.
     reference = ' '.join(list(jieba.cut(jsobj['reference'])))
     for text in texts:
-        sample = text+'<sep>'+reference  # Seperate source and reference.
+        sample = text + '<sep>' + reference  # Seperate source and reference.
         samples.add(sample)
 write_path = os.path.join(abs_path, '../files/samples.txt')
 write_samples(samples, write_path)

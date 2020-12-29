@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import pathlib
 import sys
+import pathlib
 abs_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(sys.path.append(abs_path))
 
@@ -17,8 +17,8 @@ def read_samples(filename):
         list: A list conatining all the samples in the file.
     """
     samples = []
-    with open(filename, 'r', encoding='utf8') as file:
-        for line in file:
+    with open(filename, 'r', encoding='utf8') as f:
+        for line in f:
             samples.append(line.strip())
     return samples
 
@@ -31,10 +31,10 @@ def write_samples(samples, file_path, opt='w'):
         file_path (str): The path of file to write.
         opt (str, optional): The "mode" parameter in open(). Defaults to 'w'.
     """
-    with open(file_path, opt, encoding='utf8') as file:
+    with open(file_path, opt, encoding='utf8') as f:
         for line in samples:
-            file.write(line)
-            file.write('\n')
+            f.write(line)
+            f.write('\n')
 
 
 def partition(samples):
