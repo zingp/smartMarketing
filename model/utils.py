@@ -129,7 +129,7 @@ def source2ids(source_words, vocab):
     unk_id = vocab.UNK
     for w in source_words:
         i = vocab[w]
-        if i == unk_id:  # If w is OOV
+        if i == unk_id:        # If w is OOV
             if w not in oovs:  # Add to list of OOVs
                 oovs.append(w)
             # This is 0 for the first source OOV, 1 for the second source OOV

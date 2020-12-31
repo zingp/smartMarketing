@@ -86,8 +86,8 @@ class PairDataset(object):
 
 
 class SampleDataset(Dataset):
-    """The class represents a sample set for training.
-
+    """
+    The class represents a sample set for training.
     """
     def __init__(self, data_pair, vocab):
         self.src_sents = [x[0] for x in data_pair]

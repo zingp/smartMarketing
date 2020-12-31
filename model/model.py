@@ -342,7 +342,7 @@ class PGN(nn.Module):
             batch_loss (Tensor): The average loss of the current batch.
         """
 
-        x_copy = replace_oovs(x, self.v)
+        x_copy = replace_oovs(x, self.v)   # oov_id替换成unk_id
         x_padding_masks = torch.ne(x, 0).byte().float()
         encoder_output, encoder_states = self.encoder(x_copy)
         # Reduce encoder hidden states.
