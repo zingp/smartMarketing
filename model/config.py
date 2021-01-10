@@ -74,7 +74,7 @@ losses_path = '../saved_model/' + model_name + '/val_losses.pkl'
 log_path = '../runs/' + model_name
 
 # Beam search
-beam_size: int = 3
-alpha = 0.2
-beta = 0.2
-gamma = 0.6
+beam_size: Optional[int] = 3
+alpha: Optional[float] = 0.2
+beta: Optional[float] = 0.2
+gamma: Optional[float] = 0.6

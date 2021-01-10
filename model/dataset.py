@@ -1,21 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-
-import sys
 import os
+import sys
 import pathlib
-from collections import Counter
-from typing import Callable
+abs_path = pathlib.Path(__file__).parent.absolute()
+sys.path.append(sys.path.append(abs_path))
 
 import torch
 from torch.utils.data import Dataset
+from collections import Counter
+from typing import Callable
 
-abs_path = pathlib.Path(__file__).parent.absolute()
-sys.path.append(sys.path.append(abs_path))
-from utils import simple_tokenizer, count_words, sort_batch_by_len, source2ids, abstract2ids
-from vocab import Vocab
 import config
+from vocab import Vocab
+from util import count_words
+from util import source2ids
+from util import abstract2ids
+from utils import simple_tokenizer
+from util import sort_batch_by_len
 
 
 class PairDataset(object):

@@ -3,16 +3,15 @@
 import os
 import sys
 import pathlib
-import torch
-from tqdm import tqdm
-import numpy as np
-from torch.utils.data import DataLoader
-
 abs_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(sys.path.append(abs_path))
 
-from dataset import collate_fn
+import torch
 import config
+import numpy as np
+from tqdm import tqdm
+from torch.utils.data import DataLoader
+from dataset import collate_fn
 
 
 def evaluate(model, val_data, epoch, teacher_forcing):
