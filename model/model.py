@@ -23,7 +23,7 @@ class Encoder(nn.Module):
         super(Encoder, self).__init__()
         self.embedding = nn.Embedding(vocab_size, embed_size)
         self.hidden_size = hidden_size
-        # 双向LSTM
+        # 单层双向LSTM
         self.lstm = nn.LSTM(embed_size,
                             hidden_size,
                             bidirectional=True,
