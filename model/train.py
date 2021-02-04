@@ -22,13 +22,13 @@ from utils import ScheduledSampler, config_info
 
 
 def train(dataset, val_dataset, v, start_epoch=0):
-    """Train the model, evaluate it and store it.
+    """训练、评估（验证）、存储模型.
 
     Args:
-        dataset (dataset.PairDataset): The training dataset.
-        val_dataset (dataset.PairDataset): The evaluation dataset.
-        v (vocab.Vocab): The vocabulary built from the training dataset.
-        start_epoch (int, optional): The starting epoch number. Defaults to 0.
+        dataset (dataset.PairDataset): 训练集.
+        val_dataset (dataset.PairDataset): 验证集.
+        v (vocab.Vocab): 训练集词表.
+        start_epoch (int, optional): 初始epoch，默认为0.
     """
 
     DEVICE = torch.device("cuda" if config.is_cuda else "cpu")
@@ -37,7 +37,7 @@ def train(dataset, val_dataset, v, start_epoch=0):
     model.load_model()
     model.to(DEVICE)
     if config.fine_tune:
-        # In fine-tuning mode, we fix the weights of all parameters except attention.wc.
+        # In fine-tuning mode, 只训练attention.wc参数，其余参数固定
         print('Fine-tuning mode.')
         for name, params in model.named_parameters():
             if name != 'attention.wc.weight':
@@ -62,7 +62,7 @@ def train(dataset, val_dataset, v, start_epoch=0):
         with open(config.losses_path, 'rb') as f:
             val_losses = pickle.load(f)
 
-#     torch.cuda.empty_cache()
+    # torch.cuda.empty_cache()
     # SummaryWriter: Log writer used for TensorboardX visualization.
     writer = SummaryWriter(config.log_path)
     # tqdm: A tool for drawing progress bars during training.

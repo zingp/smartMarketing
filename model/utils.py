@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
 import time
 import heapq
 import random
-import sys
 import pathlib
 import torch
 import numpy as np
