@@ -4,8 +4,8 @@ import os
 import sys
 import pathlib
 
-from rouge import Rouge
 import jieba
+from rouge import Rouge
 
 abs_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(sys.path.append(abs_path))

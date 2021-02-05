@@ -28,6 +28,7 @@ def evaluate(model, val_data, epoch, teacher_forcing):
     print('validating')
 
     val_loss = []
+    model.eval()
     with torch.no_grad():
         DEVICE = config.DEVICE
         val_dataloader = DataLoader(dataset=val_data,

@@ -11,7 +11,8 @@ import torch.nn.functional as F
 abs_path = pathlib.Path(__file__).parent.absolute()
 sys.path.append(sys.path.append(abs_path))
 import config
-from utils import timer, replace_oovs
+from utils import timer
+from utils import replace_oovs
 
 
 class Encoder(nn.Module):
@@ -143,12 +144,9 @@ class Decoder(nn.Module):
                  is_cuda=True):
         super(Decoder, self).__init__()
         self.embedding = nn.Embedding(vocab_size, embed_size)
-        self.DEVICE = torch.device('cuda') if is_cuda else torch.device('cpu')
         self.vocab_size = vocab_size
         self.hidden_size = hidden_size
-
         self.lstm = nn.LSTM(embed_size, hidden_size, batch_first=True)
-
         self.W1 = nn.Linear(self.hidden_size * 3, self.hidden_size)
         self.W2 = nn.Linear(self.hidden_size, vocab_size)
         if config.pointer:

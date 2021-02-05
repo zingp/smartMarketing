@@ -8,7 +8,6 @@ from typing import Optional
 hidden_size: int = 512
 dec_hidden_size: Optional[int] = 512
 embed_size: int = 512
-pointer = True
 
 # Data
 max_vocab_size = 20000
@@ -37,6 +36,8 @@ eps = 1e-31
 learning_rate = 0.001
 lr_decay = 0.0
 initial_accumulator_value = 0.1
+
+pointer = True
 epochs = 10
 batch_size = 32
 coverage = False
