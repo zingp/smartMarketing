@@ -122,9 +122,9 @@ def train(dataset, val_dataset, vocab):
         # Calculate average loss over all batches in an epoch.
         epoch_loss = np.mean(batch_losses)
 
-        epoch_progress.set_description(f'Epoch {epoch}')
-        epoch_progress.set_postfix(Loss=epoch_loss)
-        epoch_progress.update()
+        # epoch_progress.set_description(f'Epoch {epoch}')
+        # epoch_progress.set_postfix(Loss=epoch_loss)
+        # epoch_progress.update()
 
         avg_val_loss = evaluate(model, val_data, epoch, teacher_forcing)
 
