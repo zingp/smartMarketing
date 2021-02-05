@@ -5,26 +5,26 @@ from typing import Optional
 
 
 # General
-hidden_size: int = 512
+hidden_size: Optional[int] = 512
 dec_hidden_size: Optional[int] = 512
-embed_size: int = 512
+embed_size: Optional[int] = 512
 
 # Data
-max_vocab_size = 20000
-embed_file: Optional[str] = None  # use pre-trained embeddings
-source = "train"  # 'big_samples'    # use value: train or  big_samples 
-data_path: str = '../files/{}.txt'.format(source)
+max_vocab_size: Optional[int]= 20000
+embed_file: Optional[str] = None   # use pre-trained embeddings
+source: Optional[str] = "train"    # use value: train or  big_samples 
+data_path: Optional[str] = '../files/{}.txt'.format(source)
 val_data_path: Optional[str] = '../files/dev.txt'
 test_data_path: Optional[str] = '../files/test.txt'
-stop_word_file = '../files/HIT_stop_words.txt'
-max_src_len: int = 300  # exclusive of special tokens such as EOS
-max_tgt_len: int = 100  # exclusive of special tokens such as EOS
-truncate_src: bool = True    # 是否截断
-truncate_tgt: bool = True
-min_dec_steps: int = 30
-max_dec_steps: int = 100
-enc_rnn_dropout: float = 0.5
-enc_attn: bool = True
+stop_word_file: Optional[str] = '../files/HIT_stop_words.txt'
+max_src_len: Optional[int] = 300  # exclusive of special tokens such as EOS
+max_tgt_len: Optional[int] = 100  # exclusive of special tokens such as EOS
+truncate_src: Optional[bool] = True    # 是否截断
+truncate_tgt: Optional[bool] = True
+min_dec_steps: Optional[int] = 30
+max_dec_steps: Optional[int] = 100
+enc_rnn_dropout: Optional[float] = 0.5
+enc_attn: Optional[bool] = True
 dec_attn: bool = True
 dec_in_dropout = 0
 dec_rnn_dropout = 0
