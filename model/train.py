@@ -33,7 +33,7 @@ def train(dataset, val_dataset, vocab):
 
     DEVICE = config.DEVICE
 
-    model = PGN(v)
+    model = PGN(vocab)
     model.load_model()
     model.to(DEVICE)
     if config.fine_tune:
