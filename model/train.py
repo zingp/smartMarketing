@@ -27,8 +27,7 @@ def train(dataset, val_dataset, vocab):
     Args:
         dataset (dataset.PairDataset): 训练集.
         val_dataset (dataset.PairDataset): 验证集.
-        v (vocab.Vocab): 训练集词表.
-        start_epoch (int, optional): 初始epoch，默认为0.
+        vocab (vocab.Vocab): 训练集词表.
     """
 
     DEVICE = config.DEVICE

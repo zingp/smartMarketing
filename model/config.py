@@ -37,7 +37,7 @@ learning_rate = 0.001
 lr_decay = 0.0
 initial_accumulator_value = 0.1
 
-pointer = True
+pointer = False
 epochs = 10
 batch_size = 32
 coverage = False
