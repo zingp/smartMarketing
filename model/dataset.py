@@ -13,11 +13,11 @@ from typing import Callable
 
 import config
 from vocab import Vocab
-from util import count_words
-from util import source2ids
-from util import abstract2ids
+from utils import count_words
+from utils import source2ids
+from utils import abstract2ids
 from utils import simple_tokenizer
-from util import sort_batch_by_len
+from utils import sort_batch_by_len
 
 
 class PairDataset(object):
