@@ -105,23 +105,11 @@ def train(dataset, val_dataset, vocab):
 
             # 每100个batch记录loss
             if (batch % 100) == 0:
+                improve = ''
+                total_batch = int(batch + num_batches*epoch)
                 batch_loss = np.mean(batch_losses)
                 avg_val_loss = evaluate(model, val_dataloader, epoch, teacher_forcing)
-                writer.add_scalar("Loss/Train",
-                                    np.mean(batch_losses),
-                                    global_step=int(batch + num_batches*epoch))
-                writer.add_scalar("Loss/Dev",
-                                    avg_val_loss,
-                                    global_step=int(batch + num_batches*epoch))
-    
-                print("Epoch {0}/{1} iter: {2} tarin_loss: {3}, dev_loss: {4}".format(
-                    epoch, 
-                    config.epochs, 
-                    int(batch + num_batches*epoch), 
-                    batch_loss, 
-                    avg_val_loss
-                ))
-
+                
                 # 存储更好的模型和loss
                 if (avg_val_loss < val_losses):
                     torch.save(model.encoder, config.encoder_save_name)
@@ -129,8 +117,27 @@ def train(dataset, val_dataset, vocab):
                     torch.save(model.attention, config.attention_save_name)
                     torch.save(model.reduce_state, config.reduce_state_save_name)
                     val_losses = avg_val_loss
+                    improve = "*"
+
+                writer.add_scalar("Loss/Train",
+                                    np.mean(batch_losses),
+                                    global_step=total_batch)
+                writer.add_scalar("Loss/Dev",
+                                    avg_val_loss,
+                                    global_step=total_batch))
+                                    
+                print("Epoch {0}/{1} iter: {2} tarin_loss: {3}, dev_loss: {4} {5}".format(
+                    epoch, 
+                    config.epochs, 
+                    int(batch + num_batches*epoch), 
+                    batch_loss, 
+                    avg_val_loss,
+                    improve
+                ))
+
                 with open(config.losses_path, 'wb') as f:
                     pickle.dump(val_losses, f)
+
                 model.train()
     writer.close()
 
