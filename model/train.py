@@ -131,7 +131,7 @@ def train(dataset, val_dataset, vocab):
                     val_losses = avg_val_loss
                 with open(config.losses_path, 'wb') as f:
                     pickle.dump(val_losses, f)
-                 model.train()
+                model.train()
     writer.close()
 
 
