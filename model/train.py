@@ -120,12 +120,12 @@ def train(dataset, val_dataset, vocab):
                     improve = "*"
 
                 writer.add_scalar("Loss/Train",
-                                    np.mean(batch_losses),
-                                    global_step=total_batch)
+                                batch_loss,
+                                global_step=total_batch)
                 writer.add_scalar("Loss/Dev",
-                                    avg_val_loss,
-                                    global_step=total_batch))
-                                    
+                                avg_val_loss,
+                                global_step=total_batch)
+
                 print("Epoch {0}/{1} iter: {2} tarin_loss: {3}, dev_loss: {4} {5}".format(
                     epoch, 
                     config.epochs, 
