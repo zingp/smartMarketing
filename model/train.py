@@ -70,7 +70,7 @@ def train(dataset, val_dataset, vocab):
         print('scheduled_sampling mode.')
         teacher_forcing = True
 
-     model.train()
+    model.train()
 
     for epoch in range(config.epochs):
         print(config_info(config))
