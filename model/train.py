@@ -109,7 +109,7 @@ def train(dataset, val_dataset, vocab):
                                     avg_val_loss,
                                     global_step=int(batch + num_batches*epoch))
     
-                print("Epoch {0}/{1} iter: {2} tarin_loss: {3}, dev_loss: {}".format(
+                print("Epoch {0}/{1} iter: {2} tarin_loss: {3}, dev_loss: {4}".format(
                     epoch, 
                     config.epochs, 
                     int(batch + num_batches*epoch), 
