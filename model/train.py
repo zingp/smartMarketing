@@ -113,7 +113,7 @@ def train(dataset, val_dataset, vocab):
                     epoch, 
                     config.epochs, 
                     int(batch + num_batches*epoch), 
-                    epoch_loss, 
+                    batch_loss, 
                     avg_val_loss
                 ))
                
