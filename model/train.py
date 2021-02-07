@@ -69,10 +69,9 @@ def train(dataset, val_dataset, vocab):
         print(config_info(config))
         batch_losses = []   # 存储每个batch的数据
         num_batches = len(train_dataloader)
-        print('teacher_forcing = {}'.format(teacher_forcing))
-
-        model.train()   
+        print('teacher_forcing = {}'.format(teacher_forcing)) 
         for batch, data in enumerate(train_dataloader):
+            model.train() 
             x, y, x_len, y_len, oov, len_oovs = data
             assert not np.any(np.isnan(x.numpy()))
             if config.is_cuda: 
@@ -116,7 +115,6 @@ def train(dataset, val_dataset, vocab):
                     batch_loss, 
                     avg_val_loss
                 ))
-               
 
                 # 存储更好的模型和loss
                 if (avg_val_loss < val_losses):
