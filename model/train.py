@@ -52,6 +52,11 @@ def train(dataset, val_dataset, vocab):
                                   batch_size=config.batch_size,
                                   shuffle=True,
                                   collate_fn=collate_fn)
+    val_dataloader = DataLoader(dataset=val_data,
+                                batch_size=config.batch_size,
+                                shuffle=True,
+                                pin_memory=True, drop_last=True,
+                                collate_fn=collate_fn)
 
     val_losses = np.inf
     if (os.path.exists(config.losses_path)):
@@ -65,13 +70,14 @@ def train(dataset, val_dataset, vocab):
         print('scheduled_sampling mode.')
         teacher_forcing = True
 
+     model.train()
+
     for epoch in range(config.epochs):
         print(config_info(config))
         batch_losses = []   # 存储每个batch的数据
         num_batches = len(train_dataloader)
         print('teacher_forcing = {}'.format(teacher_forcing)) 
-        for batch, data in enumerate(train_dataloader):
-            model.train() 
+        for batch, data in enumerate(train_dataloader): 
             x, y, x_len, y_len, oov, len_oovs = data
             assert not np.any(np.isnan(x.numpy()))
             if config.is_cuda: 
@@ -100,7 +106,7 @@ def train(dataset, val_dataset, vocab):
             # 每100个batch记录loss
             if (batch % 100) == 0:
                 batch_loss = np.mean(batch_losses)
-                avg_val_loss = evaluate(model, val_data, epoch, teacher_forcing)
+                avg_val_loss = evaluate(model, val_dataloader, epoch, teacher_forcing)
                 writer.add_scalar("Loss/Train",
                                     np.mean(batch_losses),
                                     global_step=int(batch + num_batches*epoch))
@@ -125,6 +131,7 @@ def train(dataset, val_dataset, vocab):
                     val_losses = avg_val_loss
                 with open(config.losses_path, 'wb') as f:
                     pickle.dump(val_losses, f)
+                 model.train()
     writer.close()
 
 

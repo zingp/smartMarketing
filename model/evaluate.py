@@ -10,32 +10,25 @@ import torch
 import config
 import numpy as np
 from tqdm import tqdm
-from torch.utils.data import DataLoader
 from dataset import collate_fn
 
 
-def evaluate(model, val_data, epoch, teacher_forcing):
+def evaluate(model, val_dataloader, epoch, teacher_forcing):
     """Evaluate the loss for an epoch.
 
     Args:
         model (torch.nn.Module): The model to evaluate.
-        val_data (dataset.PairDataset): The evaluation data set.
+        val_dataloader (dataset.PairDataset): The evaluation data set.
         epoch (int): The epoch number.
 
     Returns:
         numpy ndarray: The average loss of the dev set.
     """
     print('validating')
-
+    DEVICE = config.DEVICE
     val_loss = []
     model.eval()
     with torch.no_grad():
-        DEVICE = config.DEVICE
-        val_dataloader = DataLoader(dataset=val_data,
-                                    batch_size=config.batch_size,
-                                    shuffle=True,
-                                    pin_memory=True, drop_last=True,
-                                    collate_fn=collate_fn)
         for batch, data in enumerate(tqdm(val_dataloader)):
             x, y, x_len, y_len, oov, len_oovs = data
             if config.is_cuda:
