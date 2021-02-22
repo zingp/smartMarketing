@@ -274,9 +274,11 @@ class ScheduledSampler():
         Returns:
             bool: teacher_forcing or not 
         """
-        ###########################################
-        #          TODO: module 5 task 1          #
-        ###########################################
+        sampling_prob = random.random()
+        if sampling_prob >= self.scheduled_probs[phase]:
+            return True
+        else:
+            return False
 
 
 

@@ -78,4 +78,4 @@ log_path = '../runs/' + model_name
 beam_size: Optional[int] = 3
 alpha: Optional[float] = 0.2
 beta: Optional[float] = 0.2
-gamma: Optional[float] = 0.6
+gamma: Optional[float] = 2000

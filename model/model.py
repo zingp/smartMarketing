@@ -46,7 +46,12 @@ class Encoder(nn.Module):
                 The hidden states of lstm (h_n, c_n).
                 Each with shape (2, batch_size, hidden_units)
         """
-        embedded = self.embedding(x)
+        # embedded = self.embedding(x)
+        # output, hidden = self.lstm(embedded)
+        if config.weight_tying:
+            embedded = decoder_embedding(x)
+        else:
+            embedded = self.embedding(x)
         output, hidden = self.lstm(embedded)
 
         return output, hidden
@@ -352,7 +357,9 @@ class PGN(nn.Module):
         for t in range(y.shape[1]-1):
 
             # Do teacher forcing.
-            x_t = y[:, t]
+            if teacher_forcing:
+                x_t = y[:, t]
+                
             x_t = replace_oovs(x_t, self.v)
 
             y_t = y[:, t+1]
