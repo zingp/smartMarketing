@@ -354,12 +354,13 @@ class PGN(nn.Module):
         coverage_vector = torch.zeros(x.size()).to(self.DEVICE)
         # Calculate loss for every step.
         step_losses = []
+        x_t = y[:, 0]
         for t in range(y.shape[1]-1):
 
             # Do teacher forcing.
             if teacher_forcing:
                 x_t = y[:, t]
-                
+
             x_t = replace_oovs(x_t, self.v)
 
             y_t = y[:, t+1]
