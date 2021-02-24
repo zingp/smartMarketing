@@ -118,9 +118,6 @@ def train(dataset, val_dataset, vocab, start_epoch=0):
                 writer.add_scalar("BatchLoss/Train",
                                 batch_loss,
                                 global_step=total_batch)
-                writer.add_scalar("Loss/Dev",
-                                avg_val_loss,
-                                global_step=total_batch)
 
                 print("Epoch {0}/{1} iter: {2} tarin_bmeanloss: {3}, bloss: {4}".format(
                     epoch, 
