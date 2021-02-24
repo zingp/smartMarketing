@@ -66,6 +66,7 @@ def train(dataset, val_dataset, vocab, start_epoch=0):
     writer = SummaryWriter(config.log_path)
     # scheduled_sampler : 一个选择是否要进行teacher_forcing的工具类
     num_epochs =  len(range(start_epoch, config.epochs))
+    scheduled_sampler = ScheduledSampler(num_epochs)
     if config.scheduled_sampling:
         print('scheduled_sampling mode.')
     teacher_forcing = True

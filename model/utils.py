@@ -13,22 +13,12 @@ import config
 
 
 def timer(module):
-    """Decorator function for a timer.
+    """统计函数耗时的装饰器
     Args:
         module (str): Description of the function being timed.
     """
     def wrapper(func):
-        """Wrapper of the timer function.
-
-        Args:
-            func (function): The function to be timed.
-        """
         def cal_time(*args, **kwargs):
-            """The timer function.
-
-            Returns:
-                res (any): The returned value of the function being timed.
-            """
             t1 = time.time()
             res = func(*args, **kwargs)
             t2 = time.time()
@@ -94,7 +84,7 @@ def outputids2words(id_list, source_oovs, vocab):
     for i in id_list:
         try:
             w = vocab.index2word[i]  # might be [UNK]
-        except IndexError:  # w is OOV
+        except IndexError:           # w is OOV
             assert_msg = "Error: cannot find the ID the in the vocabulary."
             assert source_oovs is not None, assert_msg
             source_oov_idx = i - vocab.size()
@@ -110,7 +100,7 @@ def outputids2words(id_list, source_oovs, vocab):
 
 
 def source2ids(source_words, vocab):
-    """Map the source words to their ids and return a list of OOVs in the source.
+    """映射原文tocken到对应的idx, 并且返回原文oov列表.
     Args:
         source_words: list of words (strings)
         vocab: Vocabulary object
@@ -129,12 +119,12 @@ def source2ids(source_words, vocab):
     unk_id = vocab.UNK
     for w in source_words:
         i = vocab[w]
-        if i == unk_id:        # If w is OOV
-            if w not in oovs:  # Add to list of OOVs
+        # 如果w是oov 添加到oovs 词表
+        if i == unk_id:       
+            if w not in oovs:  
                 oovs.append(w)
-            # This is 0 for the first source OOV, 1 for the second source OOV
             oov_num = oovs.index(w)
-            # This is e.g. 20000 for the first source OOV, 50001 for the second
+            # 如果50000是第一个OOV的idx, 50001则是第二个OOV的idx
             ids.append(vocab.size() + oov_num)
         else:
             ids.append(i)
@@ -142,9 +132,7 @@ def source2ids(source_words, vocab):
 
 
 def abstract2ids(abstract_words, vocab, source_oovs):
-    """Map tokens in the abstract (reference) to ids.
-       OOV tokens in the source will be remained.
-
+    """映射参考摘要中的token至idx，原文中的出现的OOV tokens 将被保留.
     Args:
         abstract_words (list): Tokens in the reference.
         vocab (vocab.Vocab): The vocabulary.
@@ -157,12 +145,15 @@ def abstract2ids(abstract_words, vocab, source_oovs):
     unk_id = vocab.UNK
     for w in abstract_words:
         i = vocab[w]
-        if i == unk_id:  # If w is an OOV word
-            if w in source_oovs:  # If w is an in-source OOV
-                # Map to its temporary source OOV number
+        # 如果是oov词汇
+        if i == unk_id: 
+            # 如果是原文oov
+            if w in source_oovs:  
+                # 找到oov对应的扩展词表中的idx
                 vocab_idx = vocab.size() + source_oovs.index(w)
                 ids.append(vocab_idx)
-            else:  # If w is an out-of-source OOV
+            # 如果不是原文oov，用unk idx
+            else: 
                 ids.append(unk_id)  # Map to the UNK token id
         else:
             ids.append(i)
@@ -246,7 +237,7 @@ def add2heap(heap, item, k):
 
 
 def replace_oovs(in_tensor, vocab):
-    """Replace oov tokens in a tensor with the <UNK> token.
+    """用<UNK> token的idx 替换oov idx. [2, 4, 1, unk_id, 6, unk_id]
 
     Args:
         in_tensor (Tensor): The tensor before replacement.
@@ -266,32 +257,29 @@ class ScheduledSampler():
         self.scheduled_probs = [i / (self.phases - 1) for i in range(self.phases)]
 
     def teacher_forcing(self, phase):
-        """According to a certain probability to choose whether to execute teacher_forcing
-
+        """根据一定的概率选择是否执行teacher_force
         Args:
-            phase (int): probability level  if phase = 0, 100% teacher_forcing ,phase = self.phases - 1, 0% teacher_forcing 
-
+            phase (int): probability level  if phase = 0, 100% teacher_forcing ,
+                         phase = self.phases - 1, 0% teacher_forcing 
         Returns:
             bool: teacher_forcing or not 
         """
-        sampling_prob = random.random()
+        sampling_prob = random.random()   # [0, 1)
         if sampling_prob >= self.scheduled_probs[phase]:
             return True
         else:
             return False
 
 
-
 def config_info(config):
-    """get some config information
-
+    """打印配置信息
     Args:
-        config (model): define in  model/config.py
+        config (model): define in model/config.py
     Returns:
         string: config information
     """
-    info = 'model_name = {}, pointer = {}, coverage = {}, fine_tune = {}, scheduled_sampling = {}, weight_tying = {},' +\
-          'source = {}  '
+    info = 'model_name={}, pointer={}, coverage={}, fine_tune={}, scheduled_sampling={}, weight_tying={}, ' +\
+          'source={} '
     return (info.format(config.model_name, config.pointer, config.coverage, config.fine_tune, config.scheduled_sampling,
                       config.weight_tying, config.source))
 
