@@ -21,7 +21,7 @@ from dataset import collate_fn, SampleDataset
 from utils import ScheduledSampler, config_info
 
 
-def train(dataset, val_dataset, vocab):
+def train(dataset, val_dataset, vocab, start_epoch=0):
     """训练、评估（验证）、存储模型.
     Args:
         dataset (dataset.PairDataset): 训练集.
@@ -64,18 +64,22 @@ def train(dataset, val_dataset, vocab):
             val_losses = pickle.load(f)
 
     writer = SummaryWriter(config.log_path)
-    # scheduled_sampler : A tool for choosing teacher_forcing or not
-    teacher_forcing = False
+    # scheduled_sampler : 一个选择是否要进行teacher_forcing的工具类
+    num_epochs =  len(range(start_epoch, config.epochs))
     if config.scheduled_sampling:
         print('scheduled_sampling mode.')
-        teacher_forcing = True
+    teacher_forcing = True
 
     model.train()
 
-    for epoch in range(config.epochs):
+    for epoch in range(start_epoch, config.epochs):
         print(config_info(config))
         batch_losses = []   # 存储每个batch的数据
         num_batches = len(train_dataloader)
+        # 设置teaching force信号
+        if config.scheduled_sampling:
+            teacher_forcing = scheduled_sampler.teacher_forcing(epoch - start_epoch)
+            
         print('teacher_forcing = {}'.format(teacher_forcing)) 
         for batch, data in enumerate(train_dataloader): 
             x, y, x_len, y_len, oov, len_oovs = data
@@ -105,40 +109,44 @@ def train(dataset, val_dataset, vocab):
 
             # 每100个batch记录loss
             if (batch % 100) == 0:
-                improve = ''
                 total_batch = int(batch + num_batches*epoch)
                 batch_loss = np.mean(batch_losses)
-                avg_val_loss = evaluate(model, val_dataloader, epoch, teacher_forcing)
-                
-                # 存储更好的模型和loss
-                if (avg_val_loss < val_losses):
-                    torch.save(model.encoder, config.encoder_save_name)
-                    torch.save(model.decoder, config.decoder_save_name)
-                    torch.save(model.attention, config.attention_save_name)
-                    torch.save(model.reduce_state, config.reduce_state_save_name)
-                    val_losses = avg_val_loss
-                    improve = "*"
 
                 writer.add_scalar("Loss/Train",
+                                loss.item(),
+                                global_step=total_batch)
+                writer.add_scalar("BatchLoss/Train",
                                 batch_loss,
                                 global_step=total_batch)
                 writer.add_scalar("Loss/Dev",
                                 avg_val_loss,
                                 global_step=total_batch)
 
-                print("Epoch {0}/{1} iter: {2} tarin_loss: {3}, dev_loss: {4} {5}".format(
+                print("Epoch {0}/{1} iter: {2} tarin_bmeanloss: {3}, bloss: {4}".format(
                     epoch, 
                     config.epochs, 
                     int(batch + num_batches*epoch), 
                     batch_loss, 
-                    avg_val_loss,
-                    improve
+                    loss.item(),
                 ))
+        avg_val_loss = evaluate(model, val_dataloader, epoch, teacher_forcing)
+        epoch_loss = np.mean(batch_losses)
+        print('EPOCH: training loss:{}'.format(epoch_loss),
+                  'validation loss:{}'.format(avg_val_loss))
+        # 存储更好的模型和loss
+        if (avg_val_loss < val_losses):
+            torch.save(model.encoder, config.encoder_save_name)
+            torch.save(model.decoder, config.decoder_save_name)
+            torch.save(model.attention, config.attention_save_name)
+            torch.save(model.reduce_state, config.reduce_state_save_name)
+            val_losses = avg_val_loss
+            improve = "*"
+        
 
-                with open(config.losses_path, 'wb') as f:
-                    pickle.dump(val_losses, f)
+        with open(config.losses_path, 'wb') as f:
+            pickle.dump(val_losses, f)
 
-                model.train()
+        model.train()
     writer.close()
 
 

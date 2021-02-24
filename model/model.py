@@ -302,22 +302,20 @@ class PGN(nn.Module):
             return p_vocab
 
         batch_size = x.size()[0]
-        # Clip the probabilities.
+        # 防止pgen为0引起nan，或者过大.
         p_gen = torch.clamp(p_gen, 0.001, 0.999)
-        # Get the weighted probabilities.
-        # Refer to equation (9).
+        # 计算权重分布，原文公式 (9).
         p_vocab_weighted = p_gen * p_vocab
         # (batch_size, seq_len)
         attention_weighted = (1 - p_gen) * attention_weights
 
-        # Get the extended-vocab probability distribution
+        # 计算扩展词表extended-vocab概率分布
         # extended_size = len(self.v) + max_oovs
         extension = torch.zeros((batch_size, max_oov)).float().to(self.DEVICE)
         # (batch_size, extended_vocab_size)
         p_vocab_extended = torch.cat([p_vocab_weighted, extension], dim=1)
 
-        # Add the attention weights to the corresponding vocab positions.
-        # Refer to equation (9).
+        # 添加注意力权重（原文长度）到词表分布（词表长度），原文公式 (9).
         final_distribution = \
             p_vocab_extended.scatter_add_(dim=1,
                                           index=x,
@@ -389,7 +387,7 @@ class PGN(nn.Module):
 
             # Apply a mask such that pad zeros do not affect the loss
             mask = torch.ne(y_t, 0).byte()
-            # Do smoothing to prevent getting NaN loss because of log(0).
+            # 平滑操作，防止log(0)出现.
             loss = -torch.log(target_probs + config.eps)
 
             if config.coverage:
