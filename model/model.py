@@ -31,8 +31,7 @@ class Encoder(nn.Module):
                             dropout=rnn_drop,
                             batch_first=True)
 
-#     @timer('encoder')
-    def forward(self, x):
+    def forward(self, x, decoder_embedding):
         """Define forward propagation for the endoer.
 
         Args:
@@ -67,7 +66,6 @@ class Attention(nn.Module):
         self.wc = nn.Linear(1, 2*hidden_units, bias=False)
         self.v = nn.Linear(2*hidden_units, 1, bias=False)
 
-#     @timer('attention')
     def forward(self,
                 decoder_states,
                 encoder_output,
@@ -157,7 +155,6 @@ class Decoder(nn.Module):
         if config.pointer:
             self.w_gen = nn.Linear(self.hidden_size * 4 + embed_size, 1)
 
-#     @timer('decoder')
     def forward(self, x_t, decoder_states, context_vector):
         """Define forward propagation for the decoder.
 
@@ -196,7 +193,10 @@ class Decoder(nn.Module):
         # (batch_size, hidden_units)
         FF1_out = self.W1(concat_vector)
         # (batch_size, vocab_size)
-        FF2_out = self.W2(FF1_out)
+        if config.weight_tying:
+            FF2_out = torch.mm(FF1_out, torch.t(self.embedding.weight))
+        else:
+            FF2_out = self.W2(FF1_out)
         # (batch_size, vocab_size)
         p_vocab = F.softmax(FF2_out, dim=1)
 
@@ -280,7 +280,6 @@ class PGN(nn.Module):
             self.attention = torch.load('../saved_model/pgn/attention.pt')
             self.reduce_state = torch.load('../saved_model/pgn/reduce_state.pt')
 
-#     @timer('final dist')
     def get_final_distribution(self, x, p_gen, p_vocab, attention_weights,
                                max_oov):
         """Calculate the final distribution for the model.
@@ -323,7 +322,6 @@ class PGN(nn.Module):
 
         return final_distribution
 
-#     @timer('model forward')
     def forward(self, x, x_len, y, len_oovs, batch, num_batches, teacher_forcing):
         """Define the forward propagation for the seq2seq model.
 
