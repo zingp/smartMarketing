@@ -59,7 +59,7 @@ class Predict():
 
         # Get encoder output and states.
         encoder_output, encoder_states = self.model.encoder(
-            replace_oovs(x, self.vocab))
+            replace_oovs(x, self.vocab), self.model.decoder.embedding)
 
         # Initialize decoder's hidden states with encoder's hidden states.
         decoder_states = self.model.reduce_state(encoder_states)
@@ -186,7 +186,7 @@ class Predict():
         """
         # run body_sequence input through encoder
         encoder_output, encoder_states = self.model.encoder(
-            replace_oovs(x, self.vocab))
+            replace_oovs(x, self.vocab), self.model.decoder.embedding)
         coverage_vector = torch.zeros((1, x.shape[1])).to(self.DEVICE)
         # initialize decoder states with encoder forward states
         decoder_states = self.model.reduce_state(encoder_states)
