@@ -136,7 +136,7 @@ class Predict():
                                                        p_vocab,
                                                        attention_weights,
                                                        torch.max(len_oovs))
-        # Calculate log probabilities.
+        # 计算对数概率.
         log_probs = torch.log(final_dist.squeeze())
         # Filter forbidden tokens.
         if len(beam.tokens) == 1:
@@ -206,7 +206,6 @@ class Predict():
         # use beam search for max_sum_len (maximum length) steps
         for _ in range(max_sum_len):
             # get k best hypothesis when adding a new token
-
             topk = []
             for beam in curr:
                 # When an EOS token is generated, add the hypo to the completed
