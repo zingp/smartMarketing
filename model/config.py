@@ -42,7 +42,7 @@ epochs = 10
 batch_size = 32
 coverage = False
 fine_tune = False
-scheduled_sampling = False
+scheduled_sampling = True
 weight_tying = True
 max_grad_norm = 2.0
 is_cuda = True
@@ -55,6 +55,8 @@ if pointer:
             model_name = 'ft_pgn'
         else:
             model_name = 'cov_pgn'
+    elif scheduled_sampling and weight_tying:
+        model_name = 'psw_pgn'
     elif scheduled_sampling:
         model_name = 'ss_pgn'
     elif weight_tying:
